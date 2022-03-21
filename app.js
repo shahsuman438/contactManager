@@ -16,7 +16,7 @@ connect.on('open',()=>{
 
 const contactRouter=require('./routers/contact')
 
-
+app.use(express.json())
 app.use('/contact',contactRouter)
 
 
