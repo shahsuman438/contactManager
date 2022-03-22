@@ -2,7 +2,8 @@ const express = require('express')
 const mongoose= require('mongoose')
 const app=express();
 const url = 'mongodb://localhost/ContactManager'
-
+const contactRouter=require('./routers/contact')
+const userRouter=require('./routers/user')
 
 
 
@@ -14,12 +15,12 @@ connect.on('open',()=>{
 })
 
 
-const contactRouter=require('./routers/contact')
+
 
 app.use(express.json())
 app.use('/contact',contactRouter)
 app.use('/uploads',express.static('uploads'))
-
+app.use('/auth',userRouter)
 app.listen(4000,()=>{
     console.log("#########SERVER STARTED...########")
 })
