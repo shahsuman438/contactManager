@@ -18,6 +18,9 @@ const contactSchema=new mongoose.Schema({
     },
     address:{
         type:String,
+    },
+    photo:{
+        type:String
     }
 
 })
