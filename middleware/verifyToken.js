@@ -11,13 +11,19 @@ function verifyToken(req,res,next){
     if(token==null){
         return res.status(401).send({"msg":"Unauthorized Access"})
     }
-    let payload=jwt.verify(token,'sk1443')
-    if(!payload){
-        return res.status(401).send({"msg":"Unauthorized Access"})
+    try {
+        let payload=jwt.verify(token,'sk1443')
+        if(!payload){
+            return res.status(401).send({"msg":"Unauthorized Access"})
+        }
+        console.log(payload)
+        req.userId=payload
+        next()
+        
+    } catch (error) {
+        return res.status(401).send({"msg":error.name})
     }
-    console.log(payload)
-    req.userId=payload
-    next()
+    
 }
 
 

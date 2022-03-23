@@ -2,7 +2,7 @@ const express=require('express')
 const userModel=require('../models/user')
 const router=express.Router()
 const jwt=require('jsonwebtoken')
-
+const bcrypt=require('bcrypt')
 const verifytoken=require('../middleware/verifyToken')
 
 
@@ -62,7 +62,29 @@ router.get('/user',async(req,res)=>{
     }
 })
 
+router.post('/login',async (req,res)=>{
+   
+    try {
+        userModel.findOne({email:req.body.email}).then(
+            async(user)=>{
+                const isMatched= await bcrypt.compare(req.body.password,user.password)
+                if(isMatched){
+                    let payload={subject:user._id}
+                    let token=jwt.sign(payload,'sk1443')
+                    res.status(200).send(token)
+                }else{
+                    res.status(400).send({"msg":"invalid password"})
 
+                }
+            }
+        ).catch(
+            error=> res.status(400).send({"msg":"Invalid Email"})
+        )
+        
+    } catch (error) {
+        res.status(400).send({"msg":"Somthing went wrong"})
+    }
+})
 
 module.exports=router
 
