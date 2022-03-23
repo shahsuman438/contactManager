@@ -7,12 +7,13 @@ const router=express.Router()
 const jwt=require('jsonwebtoken')
 
 
+
 router.post('/register',async(req,res)=>{
     let userdata=req.body
     let user=new userModel(userdata)
     user.save((error,registerUser)=>{
         if(error){
-            console.log('error',error)
+            console.log('Error',error)
         }else{
             let payload={subject:registerUser._id}
             let token=jwt.sign(payload,'sk1443')
@@ -47,6 +48,8 @@ router.get('/user',async(req,res)=>{
         })
     }
 })
+
+
 
 module.exports=router
 
