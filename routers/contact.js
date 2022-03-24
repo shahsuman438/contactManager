@@ -12,12 +12,16 @@ const userModel=require('../models/user')
 
 
 
-router.get('/',async(req,res)=>{
-    try{
-        const contacts=await Contact.find()
-        res.json(contacts)
-    }catch(err){
-        res.json(err)
+router.get('/',verifyToken,async(req,res)=>{
+    try {
+        userModel.findById(req.userId.subject).then(
+            async(user)=>{
+                 res.status(200).send(user.contacts)
+            }
+        )
+        
+    } catch (erorr) {
+        res.send(500,{"msg":"Something went wrong"})    
     }
 })
 
@@ -119,7 +123,27 @@ router.put('/:id',verifyToken,upload.single('photo'),async(req,res)=>{
     }
 })
 
-
+router.delete('/:id',verifyToken,async(req,res)=>{
+    try {
+        userModel.findById(req.userId.subject).then(
+            async(err,user)=>{
+                if(!err) {
+                    user.contacts.id(req.params.id).remove((err,result)=>{
+                     if(err){
+                        res.status(400).send({"msg":err})
+                     }
+                    })
+                    await user.save()
+                    res.status(200).send(user)
+                }
+                res.status(500).send(err)
+            }
+        )
+        
+    } catch (erorr) {
+        res.send(500,{"msg":"Something went wrong"})    
+    }
+})
 
 
 
@@ -139,17 +163,17 @@ router.put('/:id',verifyToken,upload.single('photo'),async(req,res)=>{
 // })
 
 
-router.delete('/:id',async(req,res)=>{
-    try{
-        Contact.deleteOne({_id:req.params.id}).then(
-            (result)=>{
-                res.json(result)
-            }
-        )
-    }catch(err){
-        res.send(err)
-    }
-})
+// router.delete('/:id',async(req,res)=>{
+//     try{
+//         Contact.deleteOne({_id:req.params.id}).then(
+//             (result)=>{
+//                 res.json(result)
+//             }
+//         )
+//     }catch(err){
+//         res.send(err)
+//     }
+// })
 
 
 module.exports = router
