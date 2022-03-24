@@ -1,5 +1,6 @@
 const mongoose=require('mongoose')
 const bcrypt=require("bcrypt")
+const {contact} = require('./contact')
 
 const userSchema=new mongoose.Schema({
     name:{
@@ -21,7 +22,11 @@ const userSchema=new mongoose.Schema({
     photo:{
         type:String,
         default:null
+    },
+    contacts:{
+        type:[contact]
     }
+    
 })
 
 

@@ -1,4 +1,4 @@
-const mongoose=require('mongoose')
+const mongoose=require('mongoose');
 
 const contactSchema=new mongoose.Schema({
     fav:{
@@ -23,7 +23,7 @@ const contactSchema=new mongoose.Schema({
         type:String
     }
 
-})
+});
 
 
-module.exports=mongoose.model('contact',contactSchema)
+module.exports=mongoose.model('contact',contactSchema);
