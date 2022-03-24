@@ -1,6 +1,7 @@
 const mongoose=require('mongoose')
+
 const bcrypt=require("bcrypt")
-const {contact} = require('./contact')
+const contactSchema = require("./contact").schema
 
 const userSchema=new mongoose.Schema({
     name:{
@@ -23,9 +24,8 @@ const userSchema=new mongoose.Schema({
         type:String,
         default:null
     },
-    contacts:{
-        type:[contact]
-    }
+    contacts:[contactSchema]
+    
     
 })
 

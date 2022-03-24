@@ -48,7 +48,7 @@ router.get('/',async(req,res)=>{
 // })
 
 
-
+// nested block post
 router.post('/',verifyToken,upload.single('photo'),async(req,res)=>{
     try {
         userModel.findById(req.userId.subject).then(
@@ -72,26 +72,72 @@ router.post('/',verifyToken,upload.single('photo'),async(req,res)=>{
     }
 })
 
-router.put('/:id',upload.single('photo'),async (req,res)=>{
-    try{
-        Contact.updateOne({_id:req.params.id},{
-            $set:{
-                fav:req.body.fav,
-                name:req.body.name,
-                number:req.body.number,
-                email:req.body.email,
-                address:req.body.address,
-                photo:req.file?req.file.path:null
+// nested block get
+
+router.get('/:id',verifyToken,async(req,res)=>{
+    try {
+        userModel.findById(req.userId.subject).then(
+            async(user)=>{
+                 res.status(200).send(user.contacts.id(req.params.id))
             }
-        }).then((result)=>{
-            res.json({"msg":"Contact Updated"})
-        }).catch(err=>{
-            console.log("error##",err)
-        })
-    }catch(err){
-        res.send("somthing went wrong",err)
+        )
+        
+    } catch (erorr) {
+        res.send(500,{"msg":"Something went wrong"})    
     }
 })
+
+
+
+// nested block PUT
+
+
+router.put('/:id',verifyToken,upload.single('photo'),async(req,res)=>{
+    try {
+       userModel.findById(req.userId.subject,async(err,result)=>{
+           if(!err){
+               if(!result){
+                    res.status(404).send('User was not found');
+               }else{
+                    typeof req.body.fav!='undefined'?result.contacts.id(req.params.id).fav=req.body.fav:null
+                    req.body.name?result.contacts.id(req.params.id).name=req.body.name:null
+                    req.body.number?result.contacts.id(req.params.id).number=req.body.number:null
+                    req.body.email?result.contacts.id(req.params.id).email=req.body.email:null
+                    req.body.address?result.contacts.id(req.params.id).address=req.body.address:null
+                    req.file?result.contacts.id(req.params.id).photo=req.file.path:null
+                   await result.save(err=>{
+                       if(err) return res.status(500).send(err);
+                       res.status(200).send({"msg":"Update Successfull"})
+                   })  
+           }}else{
+                res.status(500).send(err.message);
+           }
+       })
+    } catch (error) {
+        res.json({"msg":error})    
+        
+    }
+})
+
+
+
+
+
+
+// normal contact update
+// router.put('/:id',upload.single('photo'),async (req,res)=>{
+//     try{
+//         Contact.updateOne({_id:req.params.id},req.body)
+//         .then((result)=>{
+//             res.json({"msg":"Contact Updated","response":result})
+//         }).catch(err=>{
+//             console.log("error##",err)
+//         })
+//     }catch(err){
+//         res.send("somthing went wrong",err)
+//     }
+// })
+
 
 router.delete('/:id',async(req,res)=>{
     try{
@@ -107,3 +153,16 @@ router.delete('/:id',async(req,res)=>{
 
 
 module.exports = router
+
+
+
+
+
+
+
+
+
+
+
+
+
