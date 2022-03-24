@@ -4,7 +4,7 @@ const router=express.Router()
 const jwt=require('jsonwebtoken')
 const bcrypt=require('bcrypt')
 const verifytoken=require('../middleware/verifyToken')
-
+const userUpload=require('../middleware/userUpload')
 
 
 router.post('/register',async(req,res)=>{
@@ -21,6 +21,9 @@ router.post('/register',async(req,res)=>{
     })
 })
 
+
+
+
 router.get('/user/:id',verifytoken,async(req,res)=>{
     try{
         userModel.findById(req.params.id).then(
@@ -35,7 +38,7 @@ router.get('/user/:id',verifytoken,async(req,res)=>{
     }
 })
 
-router.delete('/user/:id',async(req,res)=>{
+router.delete('/user/:id',verifytoken,async(req,res)=>{
     try{
         userModel.deleteOne({_id:req.params.id}).then(
             (result)=>{
@@ -60,6 +63,27 @@ router.get('/user',async(req,res)=>{
             "msg":"somthing went wrong"
         })
     }
+})
+
+
+
+router.put('/user/profile',userUpload.single('photo'),verifytoken,async (req,res)=>{
+    try {
+        userModel.updateOne({_id:req.userId.subject},{
+            $set:{
+                name:req.body.name,
+                email:req.body.email,
+                
+                photo:req.file?req.file.path:null
+            }
+        }).then(result=>{
+            res.send({"msg":"user updated"})
+        })
+
+    } catch (error) {
+        console.log("##Error:-",error)
+    }
+    
 })
 
 router.post('/login',async (req,res)=>{

@@ -17,6 +17,10 @@ const userSchema=new mongoose.Schema({
     join:{
         type:Date,
         default:Date.now
+    },
+    photo:{
+        type:String,
+        default:null
     }
 })
 
