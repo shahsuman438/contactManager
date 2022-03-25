@@ -25,31 +25,7 @@ router.get('/',verifyToken,async(req,res)=>{
     }
 })
 
-// router.post('/',upload.single('photo'),async(req,res)=>{
-//     const contact=new Contact({
-//         name:req.body.name,
-//         number:req.body.number,
-//         email:req.body.email,
-//         address:req.body.address,
-//         photo:req.file?req.file.path:null
-//     })
-//     try{
-//         const c1=await contact.save()
-//         res.json(c1)
-        
-//     }catch(err){
-//         res.json(err)
-//     }
-// })
 
-// router.get('/:id',async(req,res)=>{
-//     try{
-//         const contact=await Contact.findById(req.params.id)
-//         res.json(contact)
-//     }catch(err){
-//         console.log(err)
-//     }
-// })
 
 
 // nested block post
@@ -146,7 +122,31 @@ router.delete('/:id',verifyToken,async(req,res)=>{
 })
 
 
+// router.post('/',upload.single('photo'),async(req,res)=>{
+//     const contact=new Contact({
+//         name:req.body.name,
+//         number:req.body.number,
+//         email:req.body.email,
+//         address:req.body.address,
+//         photo:req.file?req.file.path:null
+//     })
+//     try{
+//         const c1=await contact.save()
+//         res.json(c1)
+        
+//     }catch(err){
+//         res.json(err)
+//     }
+// })
 
+// router.get('/:id',async(req,res)=>{
+//     try{
+//         const contact=await Contact.findById(req.params.id)
+//         res.json(contact)
+//     }catch(err){
+//         console.log(err)
+//     }
+// })
 
 // normal contact update
 // router.put('/:id',upload.single('photo'),async (req,res)=>{
