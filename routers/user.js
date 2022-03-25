@@ -53,7 +53,7 @@ router.delete('/user/:id',verifytoken,async(req,res)=>{
 })
 
 
-router.get('/user',async(req,res)=>{
+router.get('/user',verifytoken,async(req,res)=>{
     try{
         userModel.find().then(data=>{
             res.status(200).send(data)
