@@ -102,22 +102,29 @@ router.put('/:id',verifyToken,upload.single('photo'),async(req,res)=>{
 router.delete('/:id',verifyToken,async(req,res)=>{
     try {
         userModel.findById(req.userId.subject).then(
-            async(err,user)=>{
-                if(!err) {
-                    user.contacts.id(req.params.id).remove((err,result)=>{
-                     if(err){
-                        res.status(400).send({"msg":err})
-                     }
-                    })
-                    await user.save()
-                    res.status(200).send(user)
+            async(user,error)=>{
+                if(!error) {
+                    if(user.contacts.id(req.params.id)){
+                        user.contacts.id(req.params.id).remove(async(error,result)=>{  
+                            if(error){
+                              return res.status(400).send({"msg":err})
+                            }else{
+                               await user.save()
+                               return res.status(200).send({"msg":"contact deleted"})
+                            }
+                           })
+                    }else{
+                       return res.status(404).send({"msg":"Contact Not Found"})
+                    }
+                }else{
+                    return  res.status(500).send({"Error:":error})
                 }
-                res.status(500).send(err)
+                
             }
         )
         
     } catch (erorr) {
-        res.send(500,{"msg":"Something went wrong"})    
+      return  res.send(500,{"msg":"Something went wrong"})    
     }
 })
 
