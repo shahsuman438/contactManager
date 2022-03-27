@@ -24,9 +24,9 @@ router.post('/register',async(req,res)=>{
 
 
 
-router.get('/user/:id',verifytoken,async(req,res)=>{
+router.get('/user',verifytoken,async(req,res)=>{
     try{
-        userModel.findById(req.params.id).then(
+        userModel.findById(req.userId.subject).then(
             (data)=>{
                 res.status(200).send(data)
             }
@@ -53,7 +53,8 @@ router.delete('/user/:id',verifytoken,async(req,res)=>{
 })
 
 
-router.get('/user',verifytoken,async(req,res)=>{
+
+router.get('/users',verifytoken,async(req,res)=>{
     try{
         userModel.find().then(data=>{
             res.status(200).send(data)
@@ -95,7 +96,7 @@ router.post('/login',async (req,res)=>{
                 if(isMatched){
                     let payload={subject:user._id}
                     let token=jwt.sign(payload,'sk1443')
-                    res.status(200).send(token)
+                    res.status(200).json({"token":token})
                 }else{
                     res.status(400).send({"msg":"invalid password"})
 
