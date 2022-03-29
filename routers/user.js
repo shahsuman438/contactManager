@@ -98,16 +98,16 @@ router.post('/login',async (req,res)=>{
                     let token=jwt.sign(payload,'sk1443')
                     res.status(200).json({"token":token})
                 }else{
-                    res.status(400).send({"msg":"invalid password"})
+                    res.status(401).json({"msg":"invalid password"})
 
                 }
             }
         ).catch(
-            error=> res.status(400).send({"msg":"Invalid Email"})
+            error=> res.status(401).json({"msg":"Invalid Email"})
         )
         
     } catch (error) {
-        res.status(400).send({"msg":"Somthing went wrong"})
+        res.status(500).send({"msg":"Somthing went wrong"})
     }
 })
 
