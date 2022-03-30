@@ -5,11 +5,11 @@ const jwt=require('jsonwebtoken')
 const bcrypt=require('bcrypt')
 const verifytoken=require('../middleware/verifyToken')
 const userUpload=require('../middleware/userUpload')
-
-
 router.post('/register',async(req,res)=>{
-    let userdata=req.body
-    let user=new userModel(userdata)
+    const salt=await bcrypt.genSalt(10)
+    const hashPassword=await bcrypt.hash(req.body.password,salt)
+    req.body.password=hashPassword
+    let user=new userModel(req.body)
     userModel.findOne({"email":req.body.email}).then(
         data=>{
             if(data){
@@ -28,7 +28,6 @@ router.post('/register',async(req,res)=>{
         }
     )
 })
-
 
 
 
@@ -86,7 +85,7 @@ router.put('/user/profile',userUpload.single('photo'),verifytoken,async (req,res
                 phone:req.body.phone,
                 address:req.body.address,
                 country:req.body.country,
-                photo:req.file?req.file.path:user.photo
+                photo:req.file?req.file.path:user.photo,
             }
         }).then(result=>{
             res.send({"msg":"user updated"})
@@ -97,6 +96,7 @@ router.put('/user/profile',userUpload.single('photo'),verifytoken,async (req,res
     }
     
 })
+
 
 router.post('/login',async (req,res)=>{
    
