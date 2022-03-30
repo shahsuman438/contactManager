@@ -5,8 +5,11 @@ const jwt=require('jsonwebtoken')
 const bcrypt=require('bcrypt')
 const verifytoken=require('../middleware/verifyToken')
 const userUpload=require('../middleware/userUpload')
+
+
+
 router.post('/register',async(req,res)=>{
-    const salt=await bcrypt.genSalt(10)
+    const salt=await bcrypt.genSalt(10) 
     const hashPassword=await bcrypt.hash(req.body.password,salt)
     req.body.password=hashPassword
     let user=new userModel(req.body)
@@ -119,6 +122,30 @@ router.post('/login',async (req,res)=>{
         
     } catch (error) {
         res.status(500).send({"msg":"Somthing went wrong"})
+    }
+})
+
+router.post('/reset',verifytoken,async(req,res)=>{
+    try {
+        userModel.findOne({_id:req.userId.subject}).then(
+            async(user)=>{
+                const isMatched= await bcrypt.compare(req.body.lastpqassword,user.password)
+                if(isMatched){
+                    const salt=await bcrypt.genSalt(10)
+                    const hashPassword=await bcrypt.hash(req.body.newpassword,salt)
+                    user.password=hashPassword
+                    user.save()
+                    res.status(200).json({"msg":"Password Reset Success"})
+                }else{
+                    res.status(401).json({"msg":"Last password Not matched"})
+
+                }
+            }
+        ).catch(
+            error=> res.status(401).json({"msg":"User not found"})
+        )
+    } catch (error) {
+        
     }
 })
 
