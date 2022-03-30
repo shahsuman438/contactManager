@@ -10,15 +10,23 @@ const userUpload=require('../middleware/userUpload')
 router.post('/register',async(req,res)=>{
     let userdata=req.body
     let user=new userModel(userdata)
-    user.save((error,registerUser)=>{
-        if(error){
-            console.log('Error',error)
-        }else{
-            let payload={subject:registerUser._id}
-            let token=jwt.sign(payload,'sk1443')
-            res.status(200).send({token})
+    userModel.findOne({"email":req.body.email}).then(
+        data=>{
+            if(data){
+                res.status(401).send({"msg":"Email already exist"})
+            }else{
+                user.save((error,registerUser)=>{
+                    if(error){
+                        console.log('Error',error)
+                    }else{
+                        let payload={subject:registerUser._id}
+                        let token=jwt.sign(payload,'sk1443')
+                        res.status(200).send({token})
+                    }
+                })
+            }
         }
-    })
+    )
 })
 
 
