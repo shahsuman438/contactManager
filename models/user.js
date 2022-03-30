@@ -24,6 +24,15 @@ const userSchema=new mongoose.Schema({
         type:String,
         default:null
     },
+    phone:{
+        type:Number
+    },
+    address:{
+        type:String
+    },
+    country:{
+        type:String
+    },
     contacts:[contactSchema]
     
     

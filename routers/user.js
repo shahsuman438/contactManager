@@ -78,12 +78,15 @@ router.get('/users',verifytoken,async(req,res)=>{
 
 router.put('/user/profile',userUpload.single('photo'),verifytoken,async (req,res)=>{
     try {
+        const user=userModel.find({_id:req.userId.subject})
         userModel.updateOne({_id:req.userId.subject},{
             $set:{
                 name:req.body.name,
                 email:req.body.email,
-                
-                photo:req.file?req.file.path:null
+                phone:req.body.phone,
+                address:req.body.address,
+                country:req.body.country,
+                photo:req.file?req.file.path:user.photo
             }
         }).then(result=>{
             res.send({"msg":"user updated"})
