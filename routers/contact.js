@@ -34,10 +34,10 @@ router.post('/',verifyToken,upload.single('photo'),async(req,res)=>{
         userModel.findById(req.userId.subject).then(
             user=>{
                 const contact=new Contact({
-                    fav:req.body.fav,
-                    name:req.body.name,
+                    fav:req.body.fav, 
+                    name:req.body.name, 
                     number:req.body.number,
-                    email:req.body.email,
+                    email:req.body.email, 
                     address:req.body.address,
                     photo:req.file?req.file.path:null
                 })

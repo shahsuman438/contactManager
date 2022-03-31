@@ -120,7 +120,7 @@ router.post('/login',async (req,res)=>{
             error=> res.status(401).json({"msg":"Invalid Email"})
         )
         
-    } catch (error) {
+    } catch (error) { 
         res.status(500).send({"msg":"Somthing went wrong"})
     }
 })
@@ -147,7 +147,6 @@ router.post('/reset',verifytoken,async(req,res)=>{
     } catch (error) {
         
     }
-})
+}) 
 
 module.exports=router
-
