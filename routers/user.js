@@ -125,7 +125,7 @@ router.post('/login',async (req,res)=>{
     }
 })
 
-router.post('/reset',verifytoken,async(req,res)=>{
+router.post('/user/reset',verifytoken,async(req,res)=>{
     try {
         userModel.findOne({_id:req.userId.subject}).then(
             async(user)=>{
