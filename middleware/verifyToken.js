@@ -11,7 +11,7 @@ function verifyToken(req,res,next){
         return res.status(401).send({"msg":"Unauthorized Access"})
     }
     try {
-        let payload=jwt.verify(token,'sk1443')
+        let payload=jwt.verify(token,'skaccess')
         if(!payload){
             return res.status(401).send({"msg":"Unauthorized Access"})
         }
