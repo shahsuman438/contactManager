@@ -164,7 +164,7 @@ router.post('/refreshToken', (req, res) => {
             if (!err) {
                 let payload = { subject: user.subject }
                 let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "20s" })
-                res.status(200).json({ "AccessToken": accessToken} )
+                res.status(200).json({ "AccessToken": accessToken })
             } else {
                 res.status(403).json({ "msg": "Not authenticated" })
 
