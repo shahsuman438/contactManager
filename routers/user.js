@@ -155,7 +155,8 @@ router.post('/user/reset', verifytoken, async (req, res) => {
 
 
 router.post('/refreshToken', (req, res) => {
-    const refreshToken = req.body.refreshToken
+    const refreshToken = req.cookies.RefreshToken
+    console.log("Refresh token logged")
     if (!refreshToken) {
         res.status(403).json({ "msg": "Not authenticatedes" })
     }
@@ -167,10 +168,14 @@ router.post('/refreshToken', (req, res) => {
                 res.status(200).json({ "AccessToken": accessToken })
             } else {
                 res.status(403).json({ "msg": "Not authenticated" })
-
             }
         })
     }
+})
+
+router.post('/logout',(req,res)=>{
+    console.log("req.cookie:-",req.cookies)
+    res.status(202).clearCookie('RefreshToken').json({"msg":"Log Out Success"})
 })
 
 module.exports = router
