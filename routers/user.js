@@ -47,10 +47,10 @@ router.get('/user', verifytoken, async (req, res) => {
     } catch (error) {
         res.status(404).send({
             "msg": "user not found"
-        })
-    }
+        }) 
+    } 
 })
-
+ 
 router.delete('/user/:id', verifytoken, async (req, res) => {
     try {
         userModel.deleteOne({ _id: req.params.id }).then(
@@ -74,8 +74,8 @@ router.get('/users', verifytoken, async (req, res) => {
         }).catch(err => { res.status(404).send({ "msg": "user not found" }) })
     } catch (error) {
         res.status(500).send({
-            "msg": "somthing went wrong"
-        })
+            "msg": "somthing went wrong" 
+        }) 
     }
 })
 
@@ -112,8 +112,8 @@ router.post('/login', async (req, res) => {
                 const isMatched = await bcrypt.compare(req.body.password, user.password)
                 if (isMatched) {
                     let payload = { subject: user._id }
-                    let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "60s" })
-                    let refreshToken = jwt.sign(payload, 'skrefresh', { expiresIn: "1500s" })
+                    let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "10s" })
+                    let refreshToken = jwt.sign(payload, 'skrefresh', { expiresIn: "30s" })
                     Refreshtokens.push(refreshToken)
                     res.status(200).cookie("RefreshToken",refreshToken,{sameSite:'strict',httpOnly:true}).json({ "AccessToken": accessToken })
                 } else {
@@ -164,9 +164,10 @@ router.post('/refreshToken', (req, res) => {
         jwt.verify(refreshToken, 'skrefresh', (err, user) => {
             if (!err) {
                 let payload = { subject: user.subject }
-                let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "20s" })
+                let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "10s" })
                 res.status(200).json({ "AccessToken": accessToken })
             } else {
+                console.log("not veryfy refresh token")
                 res.status(403).json({ "msg": "Not authenticated" })
             }
         })
@@ -174,8 +175,8 @@ router.post('/refreshToken', (req, res) => {
 })
 
 router.post('/logout',(req,res)=>{
-    console.log("req.cookie:-",req.cookies)
+    console.log("req.cookie:-",req.cookies) 
     res.status(202).clearCookie('RefreshToken').json({"msg":"Log Out Success"})
 })
-
+  
 module.exports = router
