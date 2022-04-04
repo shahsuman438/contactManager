@@ -112,10 +112,10 @@ router.post('/login', async (req, res) => {
                 const isMatched = await bcrypt.compare(req.body.password, user.password)
                 if (isMatched) {
                     let payload = { subject: user._id }
-                    let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "20s" })
+                    let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "60s" })
                     let refreshToken = jwt.sign(payload, 'skrefresh', { expiresIn: "1500s" })
                     Refreshtokens.push(refreshToken)
-                    res.status(200).json({ "AccessToken": accessToken, "RefreshToken": refreshToken })
+                    res.status(200).cookie("RefreshToken",refreshToken,{sameSite:'strict',httpOnly:true}).json({ "AccessToken": accessToken })
                 } else {
                     res.status(401).json({ "msg": "invalid password" })
                 }
