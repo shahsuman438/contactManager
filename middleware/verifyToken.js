@@ -13,15 +13,16 @@ function verifyToken(req,res,next){
     try {
         let payload=jwt.verify(token,'skaccess')
         if(!payload){
+            console.log("!payload")
             return res.status(401).send({"msg":"Unauthorized Access"})
         }
         req.userId=payload
-        next()
+        next() 
         
     } catch (error) {
         return res.status(401).send({"msg":error.name})
     }
-    
+     
 }
 
 

@@ -112,10 +112,10 @@ router.post('/login', async (req, res) => {
                 const isMatched = await bcrypt.compare(req.body.password, user.password)
                 if (isMatched) {
                     let payload = { subject: user._id }
-                    let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "20s" })
+                    let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "40s" })
                     let refreshToken = jwt.sign(payload, 'skrefresh', { expiresIn: "1500s" })
                     Refreshtokens.push(refreshToken)
-                    res.status(200).cookie("RefreshToken",refreshToken,{sameSite:'strict',httpOnly:true}).json({ "AccessToken": accessToken })
+                    res.status(200).cookie("RefreshToken",refreshToken,{sameSite:'strict',httpOnly:true}).json({ "AccessToken": accessToken,"RefreshToken":refreshToken })
                 } else {
                     res.status(401).json({ "msg": "invalid password" })
                 }
@@ -156,7 +156,6 @@ router.post('/user/reset', verifytoken, async (req, res) => {
 
 router.post('/refreshToken', (req, res) => {
     const refreshToken = req.cookies.RefreshToken
-    console.log("Refresh token logged")
     if (!refreshToken) {
         res.status(403).json({ "msg": "Not authenticatedes" })
     }
@@ -164,10 +163,10 @@ router.post('/refreshToken', (req, res) => {
         jwt.verify(refreshToken, 'skrefresh', (err, user) => {
             if (!err) {
                 let payload = { subject: user.subject }
-                let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "10s" })
+                let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "40s" })
                 res.status(200).json({ "AccessToken": accessToken })
             } else {
-                console.log("not veryfy refresh token")
+                console.log("Refresh token Expired you need to re-login")
                 res.status(403).json({ "msg": "Not authenticated" })
             }
         })
@@ -175,8 +174,7 @@ router.post('/refreshToken', (req, res) => {
 })
 
 router.post('/logout',(req,res)=>{
-    console.log("req.cookie:-",req.cookies) 
     res.status(202).clearCookie('RefreshToken').json({"msg":"Log Out Success"})
 })
   
-module.exports = router
+module.exports = router 
