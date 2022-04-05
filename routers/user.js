@@ -25,9 +25,9 @@ router.post('/register', async (req, res) => {
                     } else {
                         let payload = { subject: registerUser._id }
                         let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "20s" })
-                        let refreshToken = jwt.sign(payload, 'skrefresh', { expiresIn: "1500s" })
+                        let refreshToken = jwt.sign(payload, 'skrefresh', { expiresIn: "40s" })
                         Refreshtokens.push(refreshToken)
-                        res.status(200).json({ "AccessToken": accessToken, "RefreshToken": refreshToken })
+                        res.status(200).cookie("RefreshToken", refreshToken, { sameSite: 'strict', httpOnly: true }).json({ "AccessToken": accessToken, "RefreshToken": refreshToken })
                     }
                 })
             }
@@ -47,10 +47,10 @@ router.get('/user', verifytoken, async (req, res) => {
     } catch (error) {
         res.status(404).send({
             "msg": "user not found"
-        }) 
-    } 
+        })
+    }
 })
- 
+
 router.delete('/user/:id', verifytoken, async (req, res) => {
     try {
         userModel.deleteOne({ _id: req.params.id }).then(
@@ -74,8 +74,8 @@ router.get('/users', verifytoken, async (req, res) => {
         }).catch(err => { res.status(404).send({ "msg": "user not found" }) })
     } catch (error) {
         res.status(500).send({
-            "msg": "somthing went wrong" 
-        }) 
+            "msg": "somthing went wrong"
+        })
     }
 })
 
@@ -112,10 +112,10 @@ router.post('/login', async (req, res) => {
                 const isMatched = await bcrypt.compare(req.body.password, user.password)
                 if (isMatched) {
                     let payload = { subject: user._id }
-                    let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "40s" })
-                    let refreshToken = jwt.sign(payload, 'skrefresh', { expiresIn: "1500s" })
+                    let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "20s" })
+                    let refreshToken = jwt.sign(payload, 'skrefresh', { expiresIn: "40s" })
                     Refreshtokens.push(refreshToken)
-                    res.status(200).cookie("RefreshToken",refreshToken,{sameSite:'strict',httpOnly:true}).json({ "AccessToken": accessToken,"RefreshToken":refreshToken })
+                    res.status(200).cookie("RefreshToken", refreshToken, { sameSite: 'strict', httpOnly: true }).json({ "AccessToken": accessToken, "RefreshToken": refreshToken })
                 } else {
                     res.status(401).json({ "msg": "invalid password" })
                 }
@@ -163,18 +163,17 @@ router.post('/refreshToken', (req, res) => {
         jwt.verify(refreshToken, 'skrefresh', (err, user) => {
             if (!err) {
                 let payload = { subject: user.subject }
-                let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "40s" })
+                let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "20s" })
                 res.status(200).json({ "AccessToken": accessToken })
             } else {
-                console.log("Refresh token Expired you need to re-login")
                 res.status(403).json({ "msg": "Not authenticated" })
             }
         })
     }
 })
 
-router.post('/logout',(req,res)=>{
-    res.status(202).clearCookie('RefreshToken').json({"msg":"Log Out Success"})
+router.post('/logout', (req, res) => {
+    res.status(202).clearCookie('RefreshToken').json({ "msg": "Log Out Success" })
 })
-  
+
 module.exports = router 
