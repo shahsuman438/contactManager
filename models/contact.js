@@ -1,18 +1,15 @@
 const mongoose=require('mongoose');
-
+const contactTypeSchema=require('./contactType').schema 
 const contactSchema=new mongoose.Schema({
     fav:{
         type:Boolean,
         default:false
     },
-    name:{
+    name:{ 
         type:String,
         required:true,
     },
-    number:{
-        type:Number,
-        required:true,
-    },
+    number:[contactTypeSchema],
     email:{
         type:String
     },
@@ -26,4 +23,4 @@ const contactSchema=new mongoose.Schema({
 });
 
 
-module.exports = mongoose.model("contact",contactSchema);
+module.exports = mongoose.model("contact",contactSchema); 
