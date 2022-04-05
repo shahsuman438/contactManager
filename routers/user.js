@@ -24,8 +24,8 @@ router.post('/register', async (req, res) => {
                         console.log('Error', error)
                     } else {
                         let payload = { subject: registerUser._id }
-                        let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "20s" })
-                        let refreshToken = jwt.sign(payload, 'skrefresh', { expiresIn: "40s" })
+                        let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "1800s" })
+                        let refreshToken = jwt.sign(payload, 'skrefresh', { expiresIn: "86400s" })
                         Refreshtokens.push(refreshToken)
                         res.status(200).cookie("RefreshToken", refreshToken, { sameSite: 'strict', httpOnly: true }).json({ "AccessToken": accessToken, "RefreshToken": refreshToken })
                     }
@@ -112,8 +112,8 @@ router.post('/login', async (req, res) => {
                 const isMatched = await bcrypt.compare(req.body.password, user.password)
                 if (isMatched) {
                     let payload = { subject: user._id }
-                    let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "20s" })
-                    let refreshToken = jwt.sign(payload, 'skrefresh', { expiresIn: "40s" })
+                    let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "1800s" })
+                    let refreshToken = jwt.sign(payload, 'skrefresh', { expiresIn: "86400s" })
                     Refreshtokens.push(refreshToken)
                     res.status(200).cookie("RefreshToken", refreshToken, { sameSite: 'strict', httpOnly: true }).json({ "AccessToken": accessToken, "RefreshToken": refreshToken })
                 } else {
@@ -163,7 +163,7 @@ router.post('/refreshToken', (req, res) => {
         jwt.verify(refreshToken, 'skrefresh', (err, user) => {
             if (!err) {
                 let payload = { subject: user.subject }
-                let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "20s" })
+                let accessToken = jwt.sign(payload, 'skaccess', { expiresIn: "1800s" })
                 res.status(200).json({ "AccessToken": accessToken })
             } else {
                 res.status(403).json({ "msg": "Not authenticated" })
