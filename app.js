@@ -6,7 +6,7 @@ const contactRouter=require('./routers/contact')
 const userRouter=require('./routers/user')
 const cors=require('cors')
 const cookieParser=require('cookie-parser')
-
+const globalContact =require('./routers/globalContact')
 const corsOptions={
     origin:'http://localhost:3000',
     credentials:true
@@ -28,6 +28,7 @@ app.use(cors(corsOptions))
 app.use('/contact',contactRouter)
 app.use('/uploads',express.static('uploads'))
 app.use('/auth',userRouter)
+app.use('/globalContact',globalContact)
 app.listen(4000,()=>{
     console.log("#########SERVER STARTED...########")
 })
