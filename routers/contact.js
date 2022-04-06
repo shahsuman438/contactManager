@@ -89,7 +89,7 @@ router.put('/:id', verifyToken, upload.single('photo'), async (req, res) => {
                         res.status(200).send({ "msg": "Update Successfull" })
                     })
                 }
-            } else {
+            } else { 
                 res.status(500).send(err.message);
             }
         })

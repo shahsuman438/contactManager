@@ -18,6 +18,10 @@ const contactSchema=new mongoose.Schema({
     },
     photo:{
         type:String
+    },
+    created:{
+        type:Date,
+        default:Date.now
     }
 
 });
