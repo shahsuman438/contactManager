@@ -1,11 +1,12 @@
 const express=require('express')
 const contactModels=require('../models/contact')
 const router = express.Router()
+const verifyToken = require('../middleware/verifyToken')
 
 
 
 
-router.get('/',async(req,res)=>{
+router.get('/',verifyToken,async(req,res)=>{
     try {
         contactModels.find()
         .then(
