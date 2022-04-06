@@ -175,12 +175,13 @@ function chartCalc(data){
             }
         }
     )
+    console.log(chartData)
     var finaldata = sort(chartData)
     return(finaldata)
 }
 
 function sort(data){
-    const k = new Date().getDay()
+    var k =6-new Date().getDay()
     var n = data.length
     var data1 = reverse(data, 0, n - k - 1)
     var data2 = reverse(data1, n - k, n - 1)
