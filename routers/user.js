@@ -156,7 +156,6 @@ router.post('/user/reset', verifytoken, async (req, res) => {
 
 router.post('/refreshToken', (req, res) => {
     const refreshToken = req.cookies.RefreshToken
-    console.log(Refreshtokens)
     if (!refreshToken || !Refreshtokens.includes(refreshToken)) {
         res.status(403).json({ "msg": "Not authenticatedes" })
     }
