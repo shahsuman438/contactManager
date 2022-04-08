@@ -35,9 +35,9 @@ router.post('/', verifyToken, upload.single('photo'), async (req, res) => {
                 const contact = new Contact({
                     fav: req.body.fav,
                     name: req.body.name,
-                    email: req.body.email, 
+                    email: req.body.email,
                     address: req.body.address,
-                    number:JSON.parse(req.body.number ),
+                    number: JSON.parse(req.body.number),
                     photo: req.file ? req.file.path : null
                 })
                 contact.save()
@@ -80,7 +80,7 @@ router.put('/:id', verifyToken, upload.single('photo'), async (req, res) => {
                 } else {
                     typeof req.body.fav != 'undefined' ? result.contacts.id(req.params.id).fav = req.body.fav : null
                     req.body.name ? result.contacts.id(req.params.id).name = req.body.name : null
-                    req.body.number ? result.contacts.id(req.params.id).number = JSON.parse(req.body.number ): null
+                    req.body.number ? result.contacts.id(req.params.id).number = JSON.parse(req.body.number) : null
                     req.body.email ? result.contacts.id(req.params.id).email = req.body.email : null
                     req.body.address ? result.contacts.id(req.params.id).address = req.body.address : null
                     req.file ? result.contacts.id(req.params.id).photo = req.file.path : null
@@ -89,7 +89,7 @@ router.put('/:id', verifyToken, upload.single('photo'), async (req, res) => {
                         res.status(200).send({ "msg": "Update Successfull" })
                     })
                 }
-            } else { 
+            } else {
                 res.status(500).send(err.message);
             }
         })
@@ -109,8 +109,13 @@ router.delete('/:id', verifyToken, async (req, res) => {
                             if (error) {
                                 return res.status(400).send({ "msg": err })
                             } else {
-                                await user.save()
-                                return res.status(200).send({ "msg": "contact deleted" })
+                                contacts.deleteOne({ _id: req.params.id }).then(
+                                    async (result) => {
+                                        await user.save()
+                                        return res.status(200).send({ "msg": "contact deleted" })
+                                    }
+                                )
+
                             }
                         })
                     } else {
