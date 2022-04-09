@@ -109,12 +109,8 @@ router.delete('/:id', verifyToken, async (req, res) => {
                             if (error) {
                                 return res.status(400).send({ "msg": err })
                             } else {
-                                contacts.deleteOne({ _id: req.params.id }).then(
-                                    async (result) => {
-                                        await user.save()
-                                        return res.status(200).send({ "msg": "contact deleted" })
-                                    }
-                                )
+                                await user.save()
+                                return res.status(200).send({ "msg": "contact deleted" })
 
                             }
                         })
